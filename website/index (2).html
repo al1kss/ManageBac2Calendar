@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="google-site-verification" content="HQ7-3pXXMGS3yD-3SzSlx9Iya-J0zA1Em-JT3CYDAhg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ManageBac & Calendar Sync</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer onload="initGoogleAuth()"></script>
+    <script src="auth.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📅 School Sync Manager</h1>
+            <div class="auth-section" id="authSection"></div>
+        </div>
+
+        <div class="main-content">
+            <div class="auth-section">
+    	        <div id="googleButtonContainer"></div>
+                <div id="userProfile"></div>
+            </div>
+	    <div id="loading" class="hidden">Loading...</div>
+            <div class="sync-section hidden" id="syncSection">
+                <div class="managebac-login">
+                    <h2>🔑 Connect ManageBac</h2>
+                    <input type="text" id="mbUsername" placeholder="ManageBac Email">
+                    <input type="password" id="mbPassword" placeholder="ManageBac Password">
+                    <button onclick="saveMBcredentials()">Save Credentials</button>
+                </div>
+                
+                <div class="sync-controls">
+                    <button class="sync-btn" onclick="syncCalendar()">
+                        <span class="btn-icon">🔄</span>
+                        Sync Now
+                    </button>
+                    <div class="sync-status" id="syncStatus"></div>
+                </div>
+            </div>
+	    <div class="database-section">
+                <h2>📦 Your Timetable Database</h2>
+                <button onclick="loadDatabase()" class="refresh-btn">🔄 Refresh Data</button>
+                <div id="databaseView" class="database-view"></div>
+                <button onclick="syncDatabase()" class="sync-btn danger">🗑️ Sync & Clear All</button>
+		<button onclick="deleteStorageFile()" class="sync-btn dager"> Delete Files </button>
+
+            </div>
+        </div>
+    </div>
+
+    <script src="managebac.js"></script>
+</body>
+</html>
