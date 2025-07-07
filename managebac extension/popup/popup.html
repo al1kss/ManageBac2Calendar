@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <img src="icon128.png" alt="Logo" class="logo">
+      <h1>ManageBac Export</h1>
+    </header>
+
+    <div class="status-bar hidden" id="statusBar">
+      <div class="spinner"></div>
+      <span class="status-text"></span>
+    </div>
+
+    <!-- Remove any new elements, keep existing structure -->
+    <div class="data-preview" id="dataPreview">
+      <div class="preview-header">
+        <h3>Captured Events</h3>
+        <div class="header-buttons">
+          <button id="scrapeNow" class="scrape-btn">
+            Scrape Now
+          </button>
+          <button class="copy-btn" aria-label="Copy data">
+            <svg class="copy-icon" viewBox="0 0 24 24"><path d="M19 21H8V7h11m0-2H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2m-3-4H4a2 2 0 0 0-2 2v14h2V3h12V1z"/></svg>
+          </button>
+        </div>
+      </div>
+      <pre class="json-output"></pre>
+    </div>
+
+    <div class="form-group">
+      <label for="userEmail">Your Email:</label>
+      <input type="email" id="userEmail" placeholder="your@email.com" class="email-input">
+    </div>
+
+    <button id="sendData" class="send-btn">
+      <span class="btn-text">Send to Calendar Sync</span>
+      <svg class="send-icon" viewBox="0 0 24 24">
+        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+      </svg>
+    </button>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

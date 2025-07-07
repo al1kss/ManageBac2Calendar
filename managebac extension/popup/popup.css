@@ -1,0 +1,206 @@
+:root {
+  --primary: #4285f4;
+  --secondary: #34a853;
+  --background: #f8f9fa;
+  --text: #2d3436;
+  --border: #dfe1e5;
+}
+
+body {
+  width: 350px;
+  margin: 0;
+  padding: 1rem;
+  font-family: 'Segoe UI', system-ui;
+  background: var(--background);
+  color: var(--text);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.email-input {
+  width: 100%;
+  padding: 0.8rem;
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.email-input:focus {
+  border-color: var(--primary);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(66,133,244,0.1);
+}
+
+.send-btn {
+  width: 100%;
+  padding: 1rem;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 1.5rem;
+}
+
+.send-btn:hover {
+  background: #357abd;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(66,133,244,0.2);
+}
+
+.send-icon {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.data-preview {
+  background: white;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  margin: 1rem 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.json-output {
+  padding: 1rem;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+  margin: 0;
+}
+
+
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 3px solid var(--primary);
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.copy-btn {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  transform: scale(1.1);
+}
+
+.copy-icon {
+  width: 18px;
+  height: 18px;
+  fill: var(--text);
+}
+
+.scrape-btn {
+  background: #59a0b6;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-right: 8px;
+}
+
+.scrape-btn:hover {
+  background: #427687;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgb(40, 70, 80);
+}
+
+.header-buttons {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.json-output {
+  max-height: 300px;
+  transition: all 0.3s ease;
+}
+
+.status-bar {
+  padding: 10px;
+  border-radius: 5px;
+  margin: 1rem 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.3s ease;
+}
+
+#statusBar.success {
+  background-color: rgba(52, 168, 83, 0.1);
+  color: #34a853;
+}
+
+#statusBar.error {
+  background-color: rgba(234, 67, 53, 0.1);
+  color: #ea4335;
+}
+
+.status-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.hidden {
+  opacity: 0;
+  height: 0;
+  padding: 0;
+  margin: 0;
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+.send-btn.processing {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.send-btn.processing .send-icon {
+  animation: spin 1s linear infinite;
+}
