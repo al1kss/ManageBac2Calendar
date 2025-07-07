@@ -1,20 +1,43 @@
 {
   "manifest_version": 3,
-  "name": "ManageBac Exporter",
-  "version": "1.7",
+  "name": "ManageBac Calendar Sync",
+  "version": "2.9.8",
+  "description": "Sync your ManageBac timetable directly to Google Calendar",
+
+  "permissions": [
+    "identity",
+    "storage",
+    "activeTab",
+    "scripting"
+  ],
+
   "host_permissions": [
     "*://*.managebac.com/*",
-    "https://alikhan.studio/*"
+    "https://www.googleapis.com/*",
+    "*://.vercel.app/*",
+    "*://demo-managebac.vercel.app/*"
   ],
-  "permissions": ["activeTab", "scripting", "storage"],
-  "action": {
-    "default_popup": "popup/popup.html"
+
+  "oauth2": {
+    "client_id": "563865911249-k8d3dki69v0vjfj0r6iqef089pg4b7gd.apps.googleusercontent.com",
+    "scopes": [
+      "https://www.googleapis.com/auth/calendar.events",
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile"
+    ]
   },
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "ManageBac Calendar Sync"
+  },
+
   "content_scripts": [{
-    "matches": ["*://*.managebac.com/*"],
+    "matches": ["*://*.managebac.com/*", "*://.vercel.app/*", "*://demo-managebac.vercel.app/*"],
     "js": ["content.js"],
     "run_at": "document_idle"
   }],
+
   "background": {
     "service_worker": "background.js"
   }

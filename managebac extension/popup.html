@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ManageBac Calendar Sync</title>
+  <link rel="stylesheet" href="https://unpkg.com/cirrus-ui@0.7.1/dist/cirrus.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/8ee0b8559b.js" crossorigin="anonymous"></script>
+  <link href="https://fonts.googleapis.com/css?family=Nunito+Sans:200,300,400,600,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #6366f1;
+      --primary-light: #818cf8;
+      --primary-dark: #4f46e5;
+      --secondary: #06b6d4;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --bg-primary: #0f172a;
+      --bg-secondary: #1e293b;
+      --bg-tertiary: #334155;
+      --text-primary: #f8fafc;
+      --text-secondary: #cbd5e1;
+      --text-muted: #64748b;
+      --glass: rgba(255, 255, 255, 0.05);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --shadow: rgba(0, 0, 0, 0.5);
+    }
+
+    * {
+      font-family: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      width: 400px;
+      min-height: 600px;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 50%, var(--bg-primary) 100%);
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+    }
+
+    /* Glass morphism effects */
+    .glass {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+    }
+
+    .glass-strong {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(25px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    /* Custom animations */
+    @keyframes slideInUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideInRight {
+      from {
+        opacity: 0;
+        transform: translateX(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-8px); }
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.05); opacity: 0.8; }
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-15px); }
+    }
+
+    @keyframes glow {
+      0%, 100% { box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(99, 102, 241, 0.6); }
+    }
+
+    @keyframes shimmer {
+      0% { background-position: -1000px 0; }
+      100% { background-position: 1000px 0; }
+    }
+
+    @keyframes glowPulse {
+      0%, 100% {
+        box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3), 0 0 0 rgba(99, 102, 241, 0);
+      }
+      50% {
+        box-shadow: 0 8px 30px rgba(99, 102, 241, 0.6), 0 0 20px rgba(99, 102, 241, 0.4);
+      }
+    }
+
+    @keyframes successGlow {
+      0%, 100% {
+        box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3), 0 0 0 rgba(16, 185, 129, 0);
+      }
+      50% {
+        box-shadow: 0 8px 30px rgba(16, 185, 129, 0.6), 0 0 20px rgba(16, 185, 129, 0.4);
+      }
+    }
+
+    @keyframes accentGlow {
+      0%, 100% {
+        box-shadow: 0 4px 20px rgba(245, 158, 11, 0.3), 0 0 0 rgba(245, 158, 11, 0);
+      }
+      50% {
+        box-shadow: 0 8px 30px rgba(245, 158, 11, 0.6), 0 0 20px rgba(245, 158, 11, 0.4);
+      }
+    }
+
+    @keyframes errorGlow {
+      0%, 100% {
+        box-shadow: 0 4px 20px rgba(239, 68, 68, 0.3), 0 0 0 rgba(239, 68, 68, 0);
+      }
+      50% {
+        box-shadow: 0 8px 30px rgba(239, 68, 68, 0.6), 0 0 20px rgba(239, 68, 68, 0.4);
+      }
+    }
+
+    .animate-slide-up { animation: slideInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1); }
+    .animate-slide-right { animation: slideInRight 0.6s cubic-bezier(0.4, 0, 0.2, 1); }
+    .animate-fade-in { animation: fadeIn 0.6s ease-out; }
+    .animate-bounce { animation: bounce 2s infinite; }
+    .animate-pulse { animation: pulse 2s infinite; }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+    .animate-glow { animation: glow 3s ease-in-out infinite; }
+
+    /* Enhanced Button styles with hover effects */
+    .btn-modern {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      border: none;
+      border-radius: 16px;
+      padding: 16px 24px;
+      font-weight: 600;
+      font-size: 14px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn-modern:hover {
+      transform: translateY(-3px) scale(1.02);
+      animation: glowPulse 0.6s ease-in-out infinite;
+    }
+
+    .btn-modern:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    /* Compact action buttons */
+    .btn-compact {
+      background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 12px 20px;
+      font-weight: 500;
+      font-size: 13px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 3px 15px rgba(16, 185, 129, 0.25);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-compact:hover {
+      transform: translateY(-2px) scale(1.02);
+      box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+      animation: successGlow 0.6s ease-in-out infinite;
+    }
+
+    .btn-compact:active {
+      transform: translateY(-1px) scale(0.98);
+    }
+
+    .btn-compact.sync {
+      background: linear-gradient(135deg, var(--accent) 0%, #d97706 100%);
+      box-shadow: 0 3px 15px rgba(245, 158, 11, 0.25);
+    }
+
+    .btn-compact.sync:hover {
+      box-shadow: 0 6px 25px rgba(245, 158, 11, 0.4);
+      animation: accentGlow 0.3s ease-in-out infinite;
+    }
+
+    .btn-compact i {
+      font-size: 14px;
+    }
+
+    /* Sign out button styles */
+    .sign-out-btn {
+      background: linear-gradient(135deg, var(--error) 0%, #dc2626 100%);
+      border: none;
+      border-radius: 8px;
+      padding: 6px 8px;
+      color: white;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 2px 8px rgba(239, 68, 68, 0.25);
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      margin-right: 10px;
+    }
+
+    .sign-out-btn:hover {
+      transform: translateY(-1px) scale(1.05);
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.4);
+      animation: errorGlow 0.6s ease-in-out infinite;
+    }
+
+    .sign-out-btn:active {
+      transform: translateY(0) scale(0.95);
+    }
+
+    .sign-out-btn i {
+      font-size: 11px;
+    }
+
+    /* Progress bar */
+    .progress-modern {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      height: 8px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-bar {
+      background: linear-gradient(90deg, var(--primary), var(--secondary), var(--primary));
+      background-size: 200% 100%;
+      animation: shimmer 2s linear infinite;
+      height: 100%;
+      border-radius: 20px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Status indicators */
+    .status-success {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 4px solid var(--success);
+      color: #6ee7b7;
+    }
+
+    .status-error {
+      background: rgba(239, 68, 68, 0.1);
+      border-left: 4px solid var(--error);
+      color: #fca5a5;
+    }
+
+    .status-warning {
+      background: rgba(245, 158, 11, 0.1);
+      border-left: 4px solid var(--warning);
+      color: #fcd34d;
+    }
+
+    .status-info {
+      background: rgba(99, 102, 241, 0.1);
+      border-left: 4px solid var(--primary);
+      color: #a5b4fc;
+    }
+
+    .status-loading {
+      background: rgba(99, 102, 241, 0.1);
+      border-left: 4px solid var(--primary);
+      color: var(--primary-light);
+    }
+
+    /* Particle system */
+    .particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .particle {
+      position: absolute;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .particle-1 {
+      width: 6px;
+      height: 6px;
+      background: var(--primary);
+      top: 10%;
+      left: 15%;
+      animation: float 6s ease-in-out infinite;
+      opacity: 0.6;
+    }
+
+    .particle-2 {
+      width: 4px;
+      height: 4px;
+      background: var(--secondary);
+      top: 60%;
+      right: 20%;
+      animation: bounce 4s ease-in-out infinite;
+      animation-delay: 1s;
+      opacity: 0.4;
+    }
+
+    .particle-3 {
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      bottom: 20%;
+      left: 20%;
+      animation: pulse 5s ease-in-out infinite;
+      animation-delay: 2s;
+      opacity: 0.5;
+    }
+
+    .particle-4 {
+      width: 3px;
+      height: 3px;
+      background: var(--success);
+      top: 80%;
+      right: 10%;
+      animation: float 7s ease-in-out infinite;
+      animation-delay: 3s;
+      opacity: 0.3;
+    }
+
+    /* Card effects */
+    .card-modern {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 20px;
+      margin: 16px 0;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .card-modern:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    }
+
+    /* Icon styles */
+    .icon-container {
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      position: relative;
+    }
+
+    .icon-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+      box-shadow: 0 3px 15px rgba(99, 102, 241, 0.3);
+    }
+
+    .icon-success {
+      background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+      box-shadow: 0 3px 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .icon-accent {
+      background: linear-gradient(135deg, var(--accent) 0%, #d97706 100%);
+      box-shadow: 0 3px 15px rgba(245, 158, 11, 0.3);
+    }
+
+    /* User avatar */
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      border: 2px solid var(--glass-border);
+      box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Text styles */
+    .text-gradient {
+      background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-weight: 800;
+    }
+
+    /* Loading spinner */
+    .spinner {
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      border-left: 2px solid var(--primary);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Scrollbar */
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      border-radius: 10px;
+    }
+
+    /* Container */
+    .container {
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Hidden utility */
+    .hidden {
+      display: none !important;
+    }
+
+    /* Flex utilities */
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .justify-center { justify-content: center; }
+    .gap-2 { gap: 8px; }
+    .gap-3 { gap: 12px; }
+    .gap-4 { gap: 16px; }
+    .flex-1 { flex: 1; }
+
+    /* Width utilities */
+    .w-full { width: 100%; }
+
+    /* Text utilities */
+    .text-center { text-align: center; }
+    .text-sm { font-size: 14px; }
+    .text-xs { font-size: 12px; }
+    .font-medium { font-weight: 500; }
+    .font-semibold { font-weight: 600; }
+    .font-bold { font-weight: 700; }
+
+    /* Margin utilities */
+    .mb-2 { margin-bottom: 8px; }
+    .mb-3 { margin-bottom: 12px; }
+    .mb-4 { margin-bottom: 16px; }
+    .mb-6 { margin-bottom: 24px; }
+    .mt-2 { margin-top: 8px; }
+    .mt-4 { margin-top: 16px; }
+
+    /* Position utilities */
+    .relative { position: relative; }
+    .absolute { position: absolute; }
+    .-top-1 { top: -4px; }
+    .-right-1 { right: -4px; }
+
+    /* Size utilities */
+    .w-3 { width: 12px; }
+    .h-3 { height: 12px; }
+
+    /* Other utilities */
+    .rounded-full { border-radius: 50%; }
+    .overflow-hidden { overflow: hidden; }
+    .cursor-pointer { cursor: pointer; }
+    .transition-colors { transition: color 0.2s ease; }
+
+    /* Enhanced status bar */
+    .status-bar {
+      border-radius: 16px;
+      padding: 16px;
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+    }
+
+    /* Footer Styles */
+    .footer {
+        background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        border-top: 2px solid #6366f1;
+        padding: 60px 0 30px 0;
+        margin-top: 80px;
+        position: relative;
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(50px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .footer.animate-in {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .footer::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 2px;
+        background: linear-gradient(90deg, transparent, #6366f1, transparent);
+        animation: progressBar 2s ease-in-out;
+    }
+
+    @keyframes progressBar {
+        0% { left: -100%; }
+        100% { left: 100%; }
+    }
+
+    .footer-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        text-align: center;
+    }
+
+    .footer-brand {
+        opacity: 0;
+        transform: translateY(-30px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.2s;
+        margin-bottom: 40px;
+    }
+
+    .footer.animate-in .footer-brand {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .footer-logo {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+
+    .footer-logo img {
+        width: 40px;
+        height: 40px;
+        transition: transform 0.6s ease;
+    }
+
+    .footer-logo:hover img {
+        animation: rotateCircle 0.6s ease-in-out;
+    }
+
+    @keyframes rotateCircle {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    .footer-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #f8fafc;
+        margin: 0;
+        transition: all 0.3s ease;
+        position: relative;
+    }
+
+    .footer-title .species-gradient {
+        background: linear-gradient(135deg, #6366f1, #818cf8, #06b6d4);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        animation: gradientShift 3s ease-in-out infinite;
+    }
+
+    @keyframes gradientShift {
+        0%, 100% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+    }
+
+    .footer-title:hover {
+        text-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+        transform: translateY(-2px);
+    }
+
+    .footer-description {
+        color: #cbd5e1;
+        font-size: 16px;
+        line-height: 1.6;
+        margin-bottom: 0;
+        transition: all 0.3s ease;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .footer-description:hover {
+        color: #f8fafc;
+        text-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+    }
+
+    .social-links {
+        opacity: 0;
+        transform: translateY(-20px);
+        transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.6s;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 40px 0 30px 0;
+    }
+
+    .footer.animate-in .social-links {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .social-link {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 45px;
+        height: 45px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(99, 102, 241, 0.3);
+        border-radius: 50%;
+        color: #cbd5e1;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        backdrop-filter: blur(10px);
+    }
+
+    .social-link:hover {
+        background: rgba(99, 102, 241, 0.2);
+        border-color: #6366f1;
+        color: #818cf8;
+        transform: translateY(-3px);
+        box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+    }
+
+    .social-link i {
+        font-size: 18px;
+    }
+
+    .footer-bottom {
+      text-align: center;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(99, 102, 241, 0.2);
+      color: #64748b;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1) 0.8s;
+      font-size: 8px;
+    }
+
+    .footer.animate-in .footer-bottom {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .footer-nav-sections {
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        .social-links {
+            justify-content: center;
+        }
+    }
+
+    /* Enhanced header spacing */
+    .header-content {
+      margin-bottom: 0;
+    }
+
+    .header-subtitle {
+      margin-top: 2px;
+      font-size: 12px;
+      line-height: 1.2;
+    }
+
+    .header-main-title {
+      margin-bottom: 0;
+      line-height: 1.1;
+    }
+  </style>
+</head>
+<body>
+  <div class="particles">
+    <div class="particle particle-1"></div>
+    <div class="particle particle-2"></div>
+    <div class="particle particle-3"></div>
+    <div class="particle particle-4"></div>
+  </div>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="mb-6 animate-slide-up">
+      <div class="flex items-center gap-4 mb-4">
+        <div class="relative" style="padding-bottom: 13px">
+          <div class="icon-container icon-primary" style="border-radius: 50%; width: 56px; height: 56px; box-shadow: 0 8px 32px rgba(99, 102, 241, 0.4);">
+            <span style="font-size: 28px;">📅</span>
+          </div>
+        </div>
+        <div class="header-content">
+          <h1 class="text-gradient text-xl font-bold header-main-title">ManageBac Sync</h1>
+          <p class="text-sm header-subtitle" style="color: var(--text-secondary);">Google Calendar Integration</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="statusBar" class="hidden mb-4 status-bar animate-slide-right">
+      <div class="flex items-center gap-3">
+        <div id="spinner" class="spinner hidden"></div>
+        <div id="statusIcon" class="text-lg"></div>
+        <span id="statusText" class="text-sm font-medium flex-1"></span>
+      </div>
+    </div>
+
+    <!-- Auth Section -->
+    <div id="authSection" class="mb-6">
+      <div id="signInSection" class="animate-fade-in">
+        <div class="card-modern text-center">
+          <div class="icon-container icon-primary mx-auto mb-4 animate-glow" style="width: 64px; height: 64px; font-size: 28px;">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+          </div>
+          <h3 class="font-bold mb-2" style="color: var(--text-primary);">Connect Your Account</h3>
+          <p class="text-sm mb-6" style="color: var(--text-secondary);">Sign in with Google to sync your calendar</p>
+
+          <button id="signInBtn" class="btn-modern w-full flex items-center justify-center gap-3">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+              <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+              <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+              <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Sign in with Google
+          </button>
+        </div>
+      </div>
+
+      <div id="userSection" class="hidden animate-slide-up">
+        <div class="card-modern" style="padding: 16px;">
+          <div class="flex items-center gap-3">
+            <div class="relative">
+              <img id="userAvatar" class="avatar" src="" alt="User Avatar">
+            </div>
+            <div class="flex-1" style="min-width: 0;">
+              <p id="userName" class="font-semibold text-sm" style="color: var(--text-primary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></p>
+              <p id="userEmail" class="text-xs" style="color: var(--text-secondary); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"></p>
+            </div>
+            <button id="signOutBtn" class="sign-out-btn">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.59L17 17l5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scrape Section -->
+    <div id="scrapeSection" class="hidden mb-6 animate-slide-up">
+      <div class="card-modern">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="icon-container icon-success animate-bounce">
+            📥
+          </div>
+          <h3 class="font-bold" style="color: var(--text-primary);">Extract Timetable</h3>
+        </div>
+
+        <button id="scrapeBtn" class="btn-compact w-full mb-4">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6z"/>
+            <path d="M14 2v6h6"/>
+            <path d="M16 13H8"/>
+            <path d="M16 17H8"/>
+            <path d="M10 9H8"/>
+          </svg>
+          Extract Data from ManageBac
+        </button>
+
+        <div id="dataPreview" class="hidden animate-fade-in">
+          <div class="glass-strong rounded-lg p-4 mb-3 overflow-hidden" style="max-height: 120px; overflow-y: auto;">
+            <pre id="dataOutput" class="text-xs font-mono custom-scroll" style="color: var(--text-secondary); white-space: pre-wrap;"></pre>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full animate-pulse" style="background-color: var(--success); display: inline-block;"></span>
+              <span class="text-xs" style="color: var(--text-muted);"><span id="eventCount">0</span> events found</span>
+            </div>
+            <div class="text-xs" style="color: var(--success);">✅ Ready to sync</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sync Section -->
+    <div id="syncSection" class="hidden animate-slide-up">
+      <div class="card-modern">
+        <div class="flex items-center gap-3 mb-4">
+          <div class="icon-container icon-accent animate-pulse">
+            🔄
+          </div>
+          <h3 class="font-bold" style="color: var(--text-primary);">Sync to Calendar</h3>
+        </div>
+
+        <button id="syncBtn" class="btn-compact sync w-full">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M19 3h-4.18C14.4 1.84 13.3 1 12 1c-1.3 0-2.4.84-2.82 2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2z"/>
+            <path d="M12 3a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+          Sync to Google Calendar
+        </button>
+
+        <div id="syncProgress" class="hidden mt-4 animate-fade-in">
+          <div class="progress-modern">
+            <div id="progressBar" class="progress-bar" style="width: 0%"></div>
+          </div>
+          <div class="flex items-center justify-between mt-2">
+            <p class="text-xs" style="color: var(--text-secondary);" id="progressText">Preparing sync...</p>
+            <p class="text-xs font-medium" style="color: var(--text-muted);" id="progressPercent">0%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer" id="footer">
+      <div class="footer-content">
+          <div class="footer-brand">
+              <div class="footer-logo">
+                  <h3 class="footer-title"><span class="species-gradient">ManageBac</span>Sync</h3>
+              </div>
+              <p class="footer-description">
+                  Synchronize your ManageBac timetable with your Calendar to be the most efficient student you can be!
+              </p>
+          </div>
+
+        <div class="social-links">
+            <a href="https://github.com/al1kss/SpeciesTracker" target="_blank" class="social-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                </svg>
+            </a>
+            <a href="https://www.linkedin.com/in/alikhan-abdykaimov/" target="_blank" class="social-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+            </a>
+            <a href="https://www.instagram.com/al1k.ss/" target="_blank" class="social-link">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+            </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+          <p style="font-size: 11px">© 2025 ManageBac Sync. Built with passion by Alikhan Abdykaimov 🌿</p>
+      </div>
+  </footer>
+
+  <script src="popup.js"></script>
+
+  <script>
+      // Footer scroll animation
+      function initFooterAnimation() {
+          const footer = document.getElementById('footer');
+
+          const observerOptions = {
+              threshold: 0.1,
+              rootMargin: '0px 0px -50px 0px'
+          };
+
+          const observer = new IntersectionObserver((entries) => {
+              entries.forEach(entry => {
+                  if (entry.isIntersecting) {
+                      footer.classList.add('animate-in');
+                  }
+              });
+          }, observerOptions);
+
+          observer.observe(footer);
+      }
+
+      // Initialize footer animation when DOM is loaded
+      document.addEventListener('DOMContentLoaded', function() {
+          initFooterAnimation();
+      });
+  </script>
+</body>
+</html>
