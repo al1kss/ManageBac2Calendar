@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- ADD YOUR GOOGLE VERIFICATION META TAG HERE -->
+    <!-- <meta name="google-site-verification" content="YOUR_VERIFICATION_CODE_WILL_GO_HERE" /> -->
+    
+    <title>📅 ManageBac Calendar Sync - Chrome Extension</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .hero {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            color: #666;
+            margin-bottom: 2rem;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin: 0.5rem;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .cta-button.secondary {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #333;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        
+        .installation {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 2rem 0;
+        }
+        
+        .installation h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #333;
+            font-size: 2rem;
+        }
+        
+        .install-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .step {
+            text-align: center;
+            padding: 1.5rem;
+        }
+        
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .footer {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .footer a {
+            color: #667eea;
+            text-decoration: none;
+            margin: 0 1rem;
+            font-weight: 500;
+        }
+        
+        .footer a:hover {
+            text-decoration: underline;
+        }
+        
+        .badge {
+            margin: 0.25rem;
+        }
+        
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .hero, .installation, .footer {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Hero Section -->
+        <div class="hero">
+            <h1>📅 ManageBac Calendar Sync</h1>
+            <p>Automatically sync your ManageBac timetable to Google Calendar in seconds!</p>
+            <p>Stop manually copying your class schedule. This Chrome extension extracts your timetable from ManageBac and syncs it directly to Google Calendar.</p>
+            
+            <div>
+                <a href="#" class="cta-button">
+                    🚀 Install Chrome Extension
+                </a>
+                <a href="https://demo-managebac.vercel.app/" class="cta-button secondary" target="_blank">
+                    🧪 Try Demo
+                </a>
+            </div>
+            
+            <div style="margin-top: 2rem;">
+                <img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="MIT License" class="badge">
+                <img src="https://img.shields.io/github/stars/al1kss/ManageBac2Calendar?style=social" alt="GitHub stars" class="badge">
+                <img src="https://img.shields.io/github/forks/al1kss/ManageBac2Calendar?style=social" alt="GitHub forks" class="badge">
+            </div>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3>One-Click Sync</h3>
+                <p>Extract your timetable from ManageBac and sync to Google Calendar in seconds</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3>Privacy First</h3>
+                <p>All data processed locally on your device. No external servers or tracking</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Never Miss Class</h3>
+                <p>Get calendar notifications and reminders right on your phone</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🌍</div>
+                <h3>Works with All Schools</h3>
+                <p>Compatible with any ManageBac instance worldwide</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🆓</div>
+                <h3>Free Forever</h3>
+                <p>No subscriptions, no premium features, just works</p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔓</div>
+                <h3>Open Source</h3>
+                <p>Transparent code you can inspect and contribute to</p>
+            </div>
+        </div>
+
+        <!-- Installation Section -->
+        <div class="installation">
+            <h2>🔧 How It Works</h2>
+            <div class="install-steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Sign In</h3>
+                    <p>Connect with your Google account</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Open ManageBac</h3>
+                    <p>Navigate to your timetable page</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Extract Data</h3>
+                    <p>Click "Extract Data" - we grab your schedule automatically</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Sync</h3>
+                    <p>Hit "Sync" - boom! Everything's in your Google Calendar</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>Made with ❤️ by <a href="https://github.com/al1kss" target="_blank">Alikhan Abdykaimov</a></strong></p>
+            <p><em>For students, by a student</em></p>
+            <div style="margin-top: 1rem;">
+                <a href="https://github.com/al1kss/ManageBac2Calendar" target="_blank">📚 View Source Code</a>
+                <a href="https://al1kss.github.io/ManageBac2Calendar/privacy-policy.html" target="_blank">🔒 Privacy Policy</a>
+                <a href="https://al1kss.github.io/ManageBac2Calendar/terms-of-service.html" target="_blank">📋 Terms of Service</a>
+            </div>
+            <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+                © 2025 ManageBac Calendar Sync. Open source under MIT License.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
