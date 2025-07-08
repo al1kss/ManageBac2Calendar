@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ManageBac Calendar Sync",
-  "version": "2.9.8",
+  "version": "1.0.0",
   "description": "Sync your ManageBac timetable directly to Google Calendar",
 
   "permissions": [
