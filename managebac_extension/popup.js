@@ -52,9 +52,9 @@ class ManageBacSync {
     this.showStatus('Signing in...', 'loading');
 
     try {
-      // Try Chrome Identity API first
+      // Force interactive auth to show OAuth prompt
       console.log('Attempting Chrome Identity API sign-in...');
-      this.accessToken = await this.getAuthToken(true);
+      this.accessToken = await this.getAuthToken(true); // true = interactive
       await this.loadUserInfo();
       this.updateUI();
       this.showStatus('Signed in successfully!', 'success');
@@ -137,13 +137,31 @@ class ManageBacSync {
 
   async signOut() {
     return new Promise((resolve) => {
+      // First, revoke the token if we have one
+      if (this.accessToken) {
+        fetch(`https://oauth2.googleapis.com/revoke?token=${this.accessToken}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          }
+        }).catch(error => {
+          console.log('Token revocation failed (this is okay):', error);
+        });
+      }
+
+      // Clear all cached tokens
       chrome.identity.clearAllCachedAuthTokens(() => {
+        // Clear extension state
         this.accessToken = null;
         this.userInfo = null;
         this.scrapedData = [];
-        this.updateUI();
-        this.showStatus('Signed out successfully', 'success');
-        resolve();
+
+        // Clear any stored data
+        chrome.storage.local.clear(() => {
+          this.updateUI();
+          this.showStatus('Signed out successfully', 'success');
+          resolve();
+        });
       });
     });
   }
