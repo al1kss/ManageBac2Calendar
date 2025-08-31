@@ -5,7 +5,7 @@
 Stop manually copying your class schedule! This Chrome extension extracts your timetable from ManageBac and syncs it directly to Google Calendar in seconds.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/YOUR-EXTENSION-ID?label=Chrome%20Web%20Store)](https://chromewebstore.google.com/detail/managebac-calendar-sync/fginnegojpkpbgeoajanjhaiacioboof)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/fginnegojpkpbgeoajanjhaiacioboof?label=Download%20The%20Extension)](https://chromewebstore.google.com/detail/managebac-calendar-sync/fginnegojpkpbgeoajanjhaiacioboof)
 [![GitHub release](https://img.shields.io/github/v/release/al1kss/ManageBac2Calendar?include_prereleases)](https://github.com/al1kss/ManageBac2Calendar/releases)
 [![GitHub stars](https://img.shields.io/github/stars/al1kss/ManageBac2Calendar?style=social)](https://github.com/al1kss/ManageBac2Calendar/stargazers)
 [![GitHub forks](https://img.shields.io/github/forks/al1kss/ManageBac2Calendar?style=social)](https://github.com/al1kss/ManageBac2Calendar/network/members)
