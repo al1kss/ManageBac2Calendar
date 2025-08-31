@@ -163,8 +163,7 @@ function scrapeRealManageBac() {
           const locationSelectors = [
             '.text-ellipsis:last-child',
             '.class-location',
-            '.period-location',
-            '.text-ellipsis'
+            '.period-location'
           ];
 
           for (const selector of locationSelectors) {
