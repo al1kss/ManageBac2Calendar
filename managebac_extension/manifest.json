@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "ManageBac Calendar Sync",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "Sync your ManageBac timetable directly to Google Calendar",
 
   "icons": {
@@ -22,6 +22,7 @@
   ],
 
   "oauth2": {
+    //563865911249-kb8eghpnkfnq2897a5qmnkcjlm9i5cao.apps.googleusercontent.com --- for testing
     "client_id": "563865911249-k8d3dki69v0vjfj0r6iqef089pg4b7gd.apps.googleusercontent.com",
     "scopes": [
       "https://www.googleapis.com/auth/calendar.events",
