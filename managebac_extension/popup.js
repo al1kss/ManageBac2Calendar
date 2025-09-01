@@ -250,18 +250,16 @@ class ManageBacSync {
                     const subject = subjectElement.textContent.trim();
 
                     let location = 'No location';
-                    const locationSelectors = [
-                      '.text-ellipsis:last-child',
-                      '.class-location',
-                      '.period-location',
-                      '.text-ellipsis'
-                    ];
+                    const directTextEllipsis = Array.from(classInfo.children).filter(child =>
+                      child.classList.contains('text-ellipsis')
+                    );
 
-                    for (const selector of locationSelectors) {
-                      const locationElement = classInfo.querySelector(selector);
-                      if (locationElement && locationElement.textContent.trim() !== subject) {
-                        location = locationElement.textContent.trim();
-                        break;
+                    if (directTextEllipsis.length > 0) {
+                      const lastElement = directTextEllipsis[directTextEllipsis.length - 1];
+                      const lastText = lastElement.textContent.trim();
+
+                      if (lastText && lastText !== subject && !lastText.includes('G12')) {
+                        location = lastText;
                       }
                     }
 
